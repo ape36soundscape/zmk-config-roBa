@@ -70,6 +70,21 @@
             key-positions = <24 25>;
         };
 
+#if defined(ROBA_CODEX_LEFT_STANDALONE)
+        codex_toggle {
+            bindings = <&tog 7>;
+            key-positions = <34 39>;
+            layers = <0 7>;
+            timeout-ms = <75>;
+        };
+
+        codex_approve_reserved {
+            bindings = <CX_APPROVE_RESERVED>;
+            key-positions = <10 14>;
+            layers = <7>;
+            timeout-ms = <75>;
+        };
+#else
         codex_toggle {
             bindings = <&tog 7>;
             key-positions = <35 42>;
@@ -83,6 +98,7 @@
             layers = <7>;
             timeout-ms = <75>;
         };
+#endif
     };
 
     macros {
@@ -174,12 +190,21 @@
 
         layer_6 {
             display-name = "SETTINGS";
+#if defined(ROBA_CODEX_LEFT_STANDALONE)
+            bindings = <
+&bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                      &trans  &trans  &trans  &trans  &trans
+&trans        &trans        &trans        &trans        &trans  &trans      &trans       &trans  &trans  &trans  &trans  &trans
+&bootloader   &trans        &trans        &trans        &trans  &bt BT_CLR  &trans       &trans  &trans  &trans  &trans  &trans
+&trans        &trans        &trans        &trans        &trans  &bt BT_CLR_ALL            &trans  &trans          &trans
+            >;
+#else
             bindings = <
 &trans  &trans        &trans        &trans        &trans                           &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
 &trans  &trans        &trans        &trans        &trans  &trans      &trans       &trans        &trans        &trans        &trans        &trans
 &trans  &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &trans  &trans      &bootloader  &trans        &trans        &trans        &trans        &bt BT_CLR
 &trans  &trans        &trans        &trans        &trans  &trans      &trans       &trans                                                  &bt BT_CLR_ALL
             >;
+#endif
         };
 
         CODEX {

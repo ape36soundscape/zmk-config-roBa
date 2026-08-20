@@ -21,6 +21,16 @@ config ZMK_SPLIT
 
 endif
 
+if SHIELD_ROBA_L_CODEX
+
+config ZMK_KEYBOARD_NAME
+    default "roBa CODEX Left"
+
+config ZMK_SPLIT
+    default n
+
+endif
+
 if SHIELD_ROBA_R_PERIPHERAL
 
 config ZMK_KEYBOARD_NAME

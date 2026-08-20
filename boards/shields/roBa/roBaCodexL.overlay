@@ -1,0 +1,6 @@
+#include "roBa_L.overlay"
+
+/*
+ * Standalone left-hand variant. The left matrix and encoder stay identical
+ * to roBa_L, while Kconfig keeps this build out of split-peripheral mode.
+ */

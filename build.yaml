@@ -18,21 +18,31 @@
 #
 ---
 include:
- # Existing standalone configuration: keep roBa_R as the split central.
- - board: seeeduino_xiao_ble
-   shield: roBa_R
-   snippet: studio-rpc-usb-uart
+  # Prospector-free split: roBa_R is the central connected to the PC.
+  - board: seeeduino_xiao_ble
+    shield: roBa_L
+    artifact-name: roBa_L_no_prospector_peripheral
+  - board: seeeduino_xiao_ble
+    shield: roBa_R
+    snippet: studio-rpc-usb-uart
+    artifact-name: roBa_R_no_prospector_central
 
- # Dongle configuration: both keyboard halves are BLE peripherals.
- - board: seeeduino_xiao_ble
-   shield: roBa_L
-   artifact-name: roBa_L_peripheral
- - board: seeeduino_xiao_ble
-   shield: roBa_R_peripheral
-   artifact-name: roBa_R_peripheral
- - board: seeeduino_xiao_ble
-   shield: roBa_dongle prospector_adapter
-   artifact-name: roBa_prospector_dongle
- - board: seeeduino_xiao_ble
-   shield: settings_reset
-   artifact-name: settings_reset
+  # Left-hand-only pseudo Codex Micro: direct USB/BLE HID, no split central.
+  - board: seeeduino_xiao_ble
+    shield: roBaCodexL
+    snippet: studio-rpc-usb-uart
+    artifact-name: roBa_L_codex_standalone
+
+  # Dongle configuration: both keyboard halves are BLE peripherals.
+  - board: seeeduino_xiao_ble
+    shield: roBa_L
+    artifact-name: roBa_L_peripheral
+  - board: seeeduino_xiao_ble
+    shield: roBa_R_peripheral
+    artifact-name: roBa_R_peripheral
+  - board: seeeduino_xiao_ble
+    shield: roBa_dongle prospector_adapter
+    artifact-name: roBa_prospector_dongle
+  - board: seeeduino_xiao_ble
+    shield: settings_reset
+    artifact-name: settings_reset

@@ -1,0 +1,6 @@
+/*
+ * The underscore-free shield name prevents ZMK's prefix candidate search
+ * from colliding with the ordinary roBa_L keymap.
+ */
+#define ROBA_CODEX_LEFT_STANDALONE
+#include "roBa.keymap"
