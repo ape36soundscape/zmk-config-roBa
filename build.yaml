@@ -18,10 +18,21 @@
 #
 ---
 include:
+ # Existing standalone configuration: keep roBa_R as the split central.
  - board: seeeduino_xiao_ble
    shield: roBa_R
    snippet: studio-rpc-usb-uart
+
+ # Dongle configuration: both keyboard halves are BLE peripherals.
  - board: seeeduino_xiao_ble
    shield: roBa_L
+   artifact-name: roBa_L_peripheral
+ - board: seeeduino_xiao_ble
+   shield: roBa_R_peripheral
+   artifact-name: roBa_R_peripheral
+ - board: seeeduino_xiao_ble
+   shield: roBa_dongle prospector_adapter
+   artifact-name: roBa_prospector_dongle
  - board: seeeduino_xiao_ble
    shield: settings_reset
+   artifact-name: settings_reset

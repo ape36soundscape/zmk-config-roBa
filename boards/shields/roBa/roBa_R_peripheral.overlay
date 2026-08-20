@@ -1,0 +1,15 @@
+#include "roBa_R.overlay"
+
+/*
+ * The stock roBa_R overlay remains the legacy central. This explicit variant
+ * sends raw PMW3610 input events to an external split central instead.
+ */
+&trackball_listener {
+    status = "disabled";
+    /delete-property/ device;
+};
+
+&trackball_split {
+    status = "okay";
+    device = <&trackball>;
+};

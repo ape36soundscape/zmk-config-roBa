@@ -1,0 +1,32 @@
+#include <dt-bindings/zmk/matrix_transform.h>
+#include "roBa.dtsi"
+
+/* The Prospector central has no key matrix of its own. */
+&kscan0 {
+    status = "disabled";
+};
+
+&roba_physical_layout {
+    /delete-property/ kscan;
+};
+
+&trackball_split {
+    status = "okay";
+};
+
+&trackball_listener {
+    status = "okay";
+};
+
+/ {
+    chosen {
+        zmk,kscan = &mock_kscan;
+    };
+
+    mock_kscan: mock_kscan_0 {
+        compatible = "zmk,kscan-mock";
+        columns = <0>;
+        rows = <0>;
+        events = <0>;
+    };
+};
