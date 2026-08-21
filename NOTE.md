@@ -121,6 +121,69 @@ Prospectorはcentralが入れ替わるため、3構成の中では手順が少�
 
 左を先、右を後に起動するのは、Prospector画面の左右battery slotを安定させるためです。表示が逆になった場合は3台をsettings resetし、同じ順でやり直します。
 
+## Prospectorの画面が映らないとき
+
+最初の画面確認にroBa左・右は必要ありません。Prospectorへ正しいdongle用UF2を書き、ProspectorだけをUSB接続すれば、左右が未接続でも画面自体は表示される想定です。画面は出るが左右のbattery情報だけが出ない場合は、LCD故障ではなくsplit接続の問題として切り分けます。
+
+今回掲載している`roBa_prospector_dongle.uf2`は、次の安全側の表示設定でビルド済みです。
+
+- 環境光センサーによる自動輝度: 無効。
+- 画面輝度: 50%固定。
+- アイドル時の自動画面消灯: 無効。
+
+したがって、暗い部屋や操作していないことだけで画面が真っ黒になるのは、このUF2の通常動作ではありません。
+
+### 1. まず分解せずに確認する
+
+1. roBa左・右の電源を切り、ProspectorだけをPCへUSB接続する。
+2. Prospectorに最後に書いたファイルが`roBa_prospector_dongle.uf2`か確認する。`settings_reset.uf2`、左用、右用を書いたままなら、dongle用UF2を書き直す。
+3. Prospectorのresetを素早く2回押し、bootloader driveがWindowsに出るか確認する。出れば、少なくともXIAO nRF52840は起動している。
+4. [`firmware/prospector/roBa_prospector_dongle.uf2`](firmware/prospector/roBa_prospector_dongle.uf2)をもう一度書き、再起動後10秒ほど待つ。
+5. 変化がなければ、別の**データ通信対応**USBケーブルと別のPC側USBポートを試す。USB hubは一度外す。
+
+`settings_reset.uf2`はBLEの接続情報を消すためのもので、LCD配線や表示回路を修復するファイルではありません。画面だけが映らないときに何度もsettings resetを繰り返す必要はありません。
+
+### 2. 画面の状態で原因を分ける
+
+| 画面・PCの状態 | 原因の目安 | 次に確認すること |
+|---|---|---|
+| 完全に真っ黒でbacklightも見えない | wrong UF2、給電、backlight配線／はんだ | 上の再書き込みとUSB交換後、電源を外して配線を確認 |
+| 画面は明るい、白い、または単色だがUIが出ない | LCDへ電源は届いているが、SPI・CS・DC・RESETなど表示信号に問題がある可能性 | 公式組立図と全配線を1本ずつ照合 |
+| UIは出るが左右batteryが空欄／未接続 | LCDではなく、左右peripheralとのBLE split接続の問題 | 3台をsettings resetし、Prospector→左→右の順で再設定 |
+| UIは出るが上下が逆 | 画面方向設定の問題。LCD自体は動作している | firmwareのrotation設定を見直す |
+| bootloader drive自体が出ない | USBケーブル、USBポート、XIAOのbootloader／給電側の問題 | ケーブルとポートを替え、resetを素早く2回押す |
+
+上の分類は切り分けの目安です。実機未確認のため、症状だけで部品故障と断定しないでください。
+
+### 3. ケースを開けて配線を確認する場合
+
+> [!CAUTION]
+> 必ずUSBを抜き、batteryを接続している場合はその電源も外してから開けてください。通電中の配線移動、はんだ付け、導通確認は行わないでください。
+
+1. [Prospector公式Assembly Manual](https://github.com/carrefinho/prospector/blob/main/docs/prospector_assembly_manual.jpg)を開く。
+2. LCDが公式BOM指定の**Waveshare 1.69inch Touch LCD Module、part number 27057**か確認する。公式READMEではnon-touch版は取付形状が異なり、適合しないと明記されている。
+3. 公式Assembly Manualのwiring diagramと、LCD・XIAO間の各配線を**1本ずつ**照合する。線の色だけを信用せず、両端のpin名で確認する。
+4. 外れた線、被覆の噛み込み、はんだ不足、隣のpadとのbridge、XIAOの向き違いがないか目視する。
+5. はんだ作業に慣れていない場合は無理に通電試験や修正をせず、両側の配線が読める写真を撮って経験者へ確認を依頼する。
+
+### 4. 解決しない場合に残す記録
+
+この派生repositoryへ相談するときは、次を添えると切り分けやすくなります。秘密情報やPCの個人情報は写さないでください。
+
+```text
+- 症状: 完全に黒い / backlightは点く / 白・単色 / UIは出るが左右情報なし
+- bootloader drive: 出る / 出ない
+- Prospector経由でroBaのキー入力: 動く / 動かない / 未確認
+- 書いたUF2名: roBa_prospector_dongle.uf2
+- UF2のSHA-256:
+- LCDの製品名・part number:
+- 試したUSBケーブル／ポート:
+- settings reset後にdongle用UF2を書き戻した: はい / いいえ
+- 電源を外して公式図と配線を照合した: はい / いいえ
+```
+
+配線写真を公開issueへ載せる場合は、背景に氏名、住所、配送ラベル、PC画面などが写り込んでいないことも確認してください。
+
 ## settings resetが必要なとき
 
 次の場合に使います。
@@ -150,6 +213,7 @@ Prospectorはcentralが入れ替わるため、3構成の中では手順が少�
 | Bluetoothで見つからない | 先にUSBで動作確認。Windowsの古い登録を削除し、centralを再起動 |
 | 右トラックボールが動かない | Prospector構成とProspectorなし構成で、右用UF2を取り違えていないか確認 |
 | 左手単体でトラックボールが動かない | 正常。トラックボールは右側にあるため左単体では使えない |
+| Prospectorの画面が映らない | 上の「Prospectorの画面が映らないとき」に沿って、まずProspector単体で確認 |
 | Prospectorの左右表示が逆 | 3台をresetし、Prospector→左→右の順で起動・接続 |
 | UF2コピー時にエラーが出る | driveが消えて再起動したなら正常終了の可能性。動作で確認 |
 | 元に戻したい | settings reset後、保管していた公式／以前のUF2を書き戻す |
@@ -222,6 +286,7 @@ roBaはKeyballから影響を受けた、BLE、分割カラムスタッガード
 
 - 作者: **[@carrefinho](https://github.com/carrefinho)**
 - Prospector hardware、case、BOM、assembly資料: [carrefinho/prospector](https://github.com/carrefinho/prospector)
+- 公式組立図・配線図: [Prospector Assembly Manual](https://github.com/carrefinho/prospector/blob/main/docs/prospector_assembly_manual.jpg)
 - ZMK moduleと表示機能: [carrefinho/prospector-zmk-module](https://github.com/carrefinho/prospector-zmk-module)
 
 Prospector repository内には、さらにdongle displayやmodule documentationなど着想・実装元へのcreditsがあります。そちらのcreditsもあわせて尊重してください。
